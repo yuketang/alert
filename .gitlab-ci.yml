@@ -1,0 +1,130 @@
+# Cache template
+.default-cache: &default-cache
+  key: elastalert
+  paths:
+    - node_modules
+
+.push-cache: &push-cache
+  cache:
+    <<: *default-cache
+    policy: push
+
+.pull-cache: &pull-cache
+  cache:
+    <<: *default-cache
+    policy: pull
+
+.node_test: &node-test
+  <<: *pull-cache
+  image: node:slim
+  stage: test
+
+stages:
+  - build
+  - test
+  - deploy
+  - mirror
+
+cache:
+  key: elastalert
+  paths:
+    - node_modules/
+  policy: pull
+
+build:
+  <<: *push-cache
+  image: node:slim
+  stage: build
+  script:
+    - npm install --quiet
+    - npm run build
+
+test:
+  <<: *node-test
+  script:
+    - npm install --quiet
+    - npm test
+
+lint:
+  <<: *node-test
+  script:
+    - npm install --quiet
+    - ./node_modules/.bin/eslint .
+
+deploy:npm:
+  image: node:slim
+  stage: deploy
+  script:
+    - npm install --quiet
+    - scripts/update-authors.sh
+    - npm publish --access public
+  only:
+    - tags
+
+deploy:docker:
+  stage: deploy
+  script:
+    - docker info
+    - docker login -u $BITSENSOR_USERNAME -p $BITSENSOR_PASSWORD artifacts.bitsensor.io:1443
+    - docker build -t elastalert .
+    - docker tag elastalert artifacts.bitsensor.io:1443/elastalert:latest
+    - docker tag elastalert artifacts.bitsensor.io:1443/elastalert:$(git describe --abbrev=0)
+    - docker push artifacts.bitsensor.io:1443/elastalert:latest
+    - docker push artifacts.bitsensor.io:1443/elastalert:$(git describe --abbrev=0)
+  only:
+    - tags
+  tags:
+    - docker
+
+deploy:docker:snapshot:
+  stage: deploy
+  script:
+    - docker info
+    - docker login -u $BITSENSOR_USERNAME -p $BITSENSOR_PASSWORD artifacts.bitsensor.io:1443
+    - docker build -t elastalert .
+    - docker tag elastalert artifacts.bitsensor.io:1443/elastalert:snapshot
+    - docker push artifacts.bitsensor.io:1443/elastalert:snapshot
+  only:
+    - develop
+  tags:
+    - docker
+
+deploy:docker-hub:
+  stage: deploy
+  script:
+    - docker info
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker build -t elastalert .
+    - docker tag elastalert bitsensor/elastalert:latest
+    - docker tag elastalert bitsensor/elastalert:$(git describe --abbrev=0)
+    - docker push bitsensor/elastalert:latest
+    - docker push bitsensor/elastalert:$(git describe --abbrev=0)
+  only:
+    - tags
+  tags:
+    - docker
+
+deploy:docker-hub:snapshot:
+  stage: deploy
+  script:
+    - docker info
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker build -t elastalert .
+    - docker tag elastalert bitsensor/elastalert:snapshot
+    - docker push bitsensor/elastalert:snapshot
+  only:
+    - develop
+  tags:
+    - docker
+
+mirror:github:
+  stage: mirror
+  script:
+    - git clone --mirror https://git.bitsensor.io/back-end/elastalert.git mirror-github
+    - cd mirror-github
+    - git remote add github https://$MIRROR_GITHUB_USER:$MIRROR_GITHUB_PASSWORD@$MIRROR_GITHUB_URL
+    - git push -u github -q --mirror
+  when: always
+  only:
+    - tags
+    - develop

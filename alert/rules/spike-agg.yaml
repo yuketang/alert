@@ -1,0 +1,49 @@
+name: "metric-spike"
+
+type: "ruletypes.SpikeAggregationRule"
+
+index: nodejs-access*
+doc_type: nodejs-access
+
+#use_run_every_query_size: true
+#run_every:
+#  minutes: 1
+spike_height: 1
+spike_type: both
+
+# The size of the window used to determine average event frequency
+# We use two sliding windows each of size timeframe
+# To measure the 'reference' rate and the current rate
+timeframe:
+  minutes: 1
+use_local_time: True
+alert_on_new_data: True
+five: True
+timestamp_field: time
+metric_agg_key: cost
+metric_agg_type: avg
+buffer_time:
+    minutes: 1
+bucket_interval:
+    minutes: 1
+sync_bucket_interval: True
+
+query_key: name.keyword
+use_count_query: False
+
+
+alert:
+- "elastalert_modules.dingtalk_alert.DingTalkAlerter"
+
+alert_text_type: alert_text_only
+alert_text: |
+  Avg(cost)波动超过200%，且avg(cost)>300ms（平均响应时间）
+  > Name: {}
+  > 查看详情: https://goo.gl/WykLA5 （请将查询参数 * 改为 {}）
+alert_text_args:
+  - name
+  - name
+
+
+dingtalk_webhook: https://oapi.dingtalk.com/robot/send?access_token=192c451dd4bc4d70b2d8a3fbdfc04e2a792bd2f59af6abcfe278b973db22816e
+dingtalk_msgtype: text

@@ -1,0 +1,46 @@
+{
+  "name": "@bitsensor/elastalert",
+  "version": "0.0.9",
+  "description": "A server that runs ElastAlert and exposes REST API's for manipulating rules and alerts.",
+  "license": "MIT",
+  "main": "index.js",
+  "author": {
+    "name": "BitSensor",
+    "url": "https://bitsensor.io",
+    "email": "dev@bitsensor.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://git.bitsensor.io/back-end/elastalert.git"
+  },
+  "directories": {
+    "lib": "./lib",
+    "test": "./test"
+  },
+  "dependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-register": "^6.14.0",
+    "body-parser": "^1.15.2",
+    "bunyan": "^1.8.1",
+    "express": "^4.14.0",
+    "joi": "^9.0.4",
+    "lodash": "^4.15.0",
+    "mkdirp": "^0.5.1",
+    "object-resolve-path": "^1.1.1",
+    "randomstring": "^1.1.5"
+  },
+  "devDependencies": {
+    "eslint": "^3.4.0",
+    "husky": "^0.11.7",
+    "istanbul": "~0.4.4",
+    "mocha": "~3.0.2"
+  },
+  "scripts": {
+    "build": "babel src -d lib",
+    "start": "sh ./scripts/start.sh",
+    "test": "./scripts/test.sh",
+    "update-authors": "./scripts/update-authors.sh",
+    "precommit": "./node_modules/eslint/bin/eslint.js ."
+  }
+}
