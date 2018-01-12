@@ -18,7 +18,7 @@ from util import ts_now
 from util import ts_to_dt
 
 
-from ruletypes import BaseAggregationRule;
+from ruletypes import BaseAggregationRule, EventWindow
 
 class SpikeAggregationRule(BaseAggregationRule):
     required_options = frozenset(['metric_agg_key', 'metric_agg_type', 'doc_type', 'timeframe', 'spike_height', 'spike_type'])
@@ -29,6 +29,7 @@ class SpikeAggregationRule(BaseAggregationRule):
 
         # shared setup
         self.ts_field = self.rules.get('timestamp_field', '@timestamp')
+        elastalert_logger.info("===============================self.ts_field: %s", self.ts_field)
 
         # aggregation setup
         # if 'max_threshold' not in self.rules and 'min_threshold' not in self.rules:
@@ -36,12 +37,18 @@ class SpikeAggregationRule(BaseAggregationRule):
 
 
         self.metric_key = self.rules['metric_agg_key'] + '_' + self.rules['metric_agg_type']
+        elastalert_logger.info("===============================self.metric_key: %s", self.metric_key)
+
         # self.rules['bucket_interval_period'] = '1m'
 
         if not self.rules['metric_agg_type'] in self.allowed_aggregations:
             raise EAException("metric_agg_type must be one of %s" % (str(self.allowed_aggregations)))
 
         self.rules['aggregation_query_element'] = self.generate_aggregation_query()
+
+
+
+
         self.ref_window_filled_once = False
 
         # spike setup

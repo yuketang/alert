@@ -1,6 +1,6 @@
 name: "metric-spike"
 
-type: "my_ruleTypes.SpikeAggregationRule"
+type: "myruletypes.SpikeAggregationRule"
 
 index: nodejs-access*
 doc_type: nodejs-access
@@ -31,6 +31,9 @@ sync_bucket_interval: True
 query_key: name.keyword
 use_count_query: False
 
+filter:
+- term:
+  cost: exists
 
 alert:
 - "elastalert_modules.dingtalk_alert.DingTalkAlerter"
