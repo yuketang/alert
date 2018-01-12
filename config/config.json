@@ -1,0 +1,21 @@
+{
+  "appName": "elastalert-server",
+  "port": 3030,
+  "elastalertPath": "/home/ykt/elk_5.6/elastalert/elastalert",
+  "verbose": true,
+  "es_debug": true,
+  "debug": true,
+  "rulesPath": {
+    "relative": true,
+    "path": "/rules"
+  },
+  "templatesPath": {
+    "relative": true,
+    "path": "/rule_templates"
+  },
+  "dataPath": {
+    "relative": true,
+    "path": "/server_data"
+  }
+}
+

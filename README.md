@@ -226,3 +226,12 @@ We [(BitSensor)](https://www.bitsensor.io) do not have any rights over the origi
 ## Copyright
 Copyright © 2016, BitSensor B.V.
 All rights reserved.
+
+
+
+
+```
+npm i
+
+
+```
