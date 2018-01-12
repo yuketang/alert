@@ -135,7 +135,7 @@ export default class TemplatesController {
     const templateFolderSettings = config.get('templatesPath');
 
     if (templateFolderSettings.relative) {
-      return joinPath(config.get('elastalertPath'), templateFolderSettings.path);
+      return joinPath(config.getElastalertPath('elastalertPath'), templateFolderSettings.path);
     } else {
       return templateFolderSettings.path;
     }

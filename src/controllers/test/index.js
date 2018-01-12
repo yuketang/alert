@@ -11,7 +11,7 @@ let fileSystem = new FileSystem();
 export default class TestController {
   constructor(server) {
     this._server = server;
-    this._elastalertPath = config.get('elastalertPath');
+    this._elastalertPath = config.getElastalertPath('elastalertPath');
     this.testFolder = this._getTestFolder();
 
     fileSystem.createDirectoryIfNotExists(this.testFolder).catch(function (error) {

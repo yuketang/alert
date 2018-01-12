@@ -94,7 +94,7 @@ export default class ElastalertServer {
     const dataFolderSettings = config.get('dataPath');
 
     if (dataFolderSettings.relative) {
-      return path.join(config.get('elastalertPath'), dataFolderSettings.path);
+      return path.join(config.getElastalertPath('elastalertPath'), dataFolderSettings.path);
     } else {
       return dataFolderSettings.path;
     }

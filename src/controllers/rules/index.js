@@ -3,8 +3,10 @@ import mkdirp from 'mkdirp';
 import FileSystem from '../../common/file_system';
 import config from '../../common/config';
 import Logger from '../../common/logger';
-import {RuleNotFoundError, RuleNotReadableError, RuleNotWritableError,
-  RulesFolderNotFoundError, RulesRootFolderNotCreatableError} from '../../common/errors/rule_request_errors';
+import {
+  RuleNotFoundError, RuleNotReadableError, RuleNotWritableError,
+  RulesFolderNotFoundError, RulesRootFolderNotCreatableError
+} from '../../common/errors/rule_request_errors';
 
 let logger = new Logger('RulesController');
 
@@ -16,12 +18,8 @@ export default class RulesController {
 
   getRules(path) {
     const self = this;
-      console.log('=================================self.rulesFolder, path', self.rulesFolder, path)
-
-      const fullPath = joinPath(self.rulesFolder, path);
-      console.log('=================================fullPath', fullPath)
-
-      return new Promise(function (resolve, reject) {
+    const fullPath = joinPath(self.rulesFolder, path);
+    return new Promise(function (resolve, reject) {
       self._fileSystemController.readDirectory(fullPath)
         .then(function (directoryIndex) {
 

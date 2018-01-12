@@ -4,6 +4,7 @@ import path from 'path';
 import schema from './schema';
 import resolvePath from 'object-resolve-path';
 import Logger from '../logger';
+import config from './index';
 
 // Config file relative from project root
 const configFile = 'config/config.json';
@@ -30,6 +31,22 @@ export default class ServerConfig {
    */
   get(key) {
     return resolvePath(this._jsonConfig, key);
+  }
+
+  /**
+   * Get a value from the config.
+   *
+   * @param {String} key The key to load the value from.
+   * @returns {*}
+   */
+  getElastalertPath() {
+    const elastalertPathSettings = config.get('elastalertPath');
+
+    if (elastalertPathSettings.relative) {
+      return path.join(process.cwd(), elastalertPathSettings.path);
+    } else {
+      return elastalertPathSettings.path;
+    }
   }
 
   /**

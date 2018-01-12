@@ -8,7 +8,7 @@ let logger = new Logger('ProcessController');
 export default class ProcessController {
 
   constructor() {
-    this._elastalertPath = config.get('elastalertPath');
+    this._elastalertPath = config.getElastalertPath('elastalertPath');
     this._status = Status.IDLE;
 
     /**

@@ -1,7 +1,10 @@
 {
   "appName": "elastalert-server",
   "port": 3030,
-  "elastalertPath": "/home/ykt/elk_5.6/elastalert/elastalert",
+  "elastalertPath": {
+    "relative": true,
+    "path": "./elastalert"
+  },
   "verbose": true,
   "es_debug": true,
   "debug": true,
